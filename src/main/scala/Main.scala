@@ -1,12 +1,12 @@
 import repository._
 import slick.jdbc.PostgresProfile.api._
-
+import model._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 object Main {
   val db = Database.forURL(
-    "jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=swordfish"
+    "jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root"
   )
   val taskRepository = new TaskRepository(db)
   val userRepository = new UserRepository(db)
@@ -14,8 +14,9 @@ object Main {
   def main(args: Array[String]): Unit = {
     //init
     //fill
-    clear
-    Await.result(taskRepository.update("data", Task(Some(1),"root","take a picture", 1), 1), Duration.Inf)
+    Interface.Menu.init
+    //clear
+    //Await.result(taskRepository.update("data", Task(Some(1),"root","take a picture", 1), 1), Duration.Inf)
   }
   def clear = {
     Await.result(taskRepository.deleteByStatus("vlad", 1), Duration.Inf)
