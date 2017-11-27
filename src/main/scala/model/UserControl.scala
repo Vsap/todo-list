@@ -88,14 +88,14 @@ object Interface{
         println("Control mode: ")
         println("Input the commands to manipulate the tasks")
         InputParser.input match {
-        //        case Some("-getAll") => {uc.getTasks.foreach(println);()}
-        //        case Some("-todo") => uc.getByStatus(1).map(println(_))
-        //        case Some("-done") => uc.getByStatus(0).map(println(_))
+          //case Some(("-getAll", Some(""), Some(""))) => {uc.getTasks.foreach(println);()}
+          case Some(("-todo", Some(""), Some(""))) => {uc.getByStatus(1).map(println(_));controller(Some(uc))}
+          case Some(("-done", Some(""), Some(""))) => {uc.getByStatus(0).map(println(_));controller(Some(uc))}
           case Some(("-mark", Some(""), Some(""))) => init //FIX!!
           case Some(("-removeAll", Some(""), Some(""))) => {uc.remove;controller(Some(uc))}
           case Some(("-remove", Some(id), Some(""))) => {uc.removeById(id.toString.toInt);controller(Some(uc))}
           case Some(("-removeDone", Some(""), Some(""))) => {uc.removeByStatus(0);controller(Some(uc))}
-          case Some(("-add", Some(text), Some(""))) => {uc.add(text.toString);controller(Some(uc))}
+          case Some(("-add", Some(""), Some(""))) => {uc.add(StdIn.readLine());controller(Some(uc))}
           case Some(("-prev", Some(""), Some(""))) => auth
           case Some(("-exit", Some(""), Some(""))) => {println("GoodBye!");()}
           case Some(_) => {println("In control mode \"Unknown command\" exception!"); controller(Some(uc))}
