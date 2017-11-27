@@ -10,9 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global._
 import scala.concurrent.Future
 
 object Interface{
-  val db = Database.forURL(
-    "jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root"
-  )
+  val db = Database.forURL("jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root")
   val taskRepository = new TaskRepository(db)
   val userRepository = new UserRepository(db)
 
@@ -43,13 +41,16 @@ object Interface{
   }
   ////ADD CHANGE STATUS COMMAND (here & in def controller)
   object InputParser{
-    def input: String = StdIn.readLine()
-    val authorizationCommands: List[String] = List("--help", "--signIn", "--signUp","--exit")
+    val cmdPattern = """(-[a-zA-Z]*?) ([0-9a-zA-Z]*?) ([0-9a-zA-Z]*)""".r
+    def input: (String, Option[String], Option[String]) = cmdPattern.findFirstIn(StdIn.readLine()) match {
+      case ("-signIn", login, password) => ("-signIn", Option(login), Option(password))
+    }
+    val authorizationCommands: List[String] = List("--help", "-signIn", "-signUp","-exit")
     val authCmdsDescription: List[String] = List(
       "input \"--help\" with no args to get all the commands with the description",
-      "input \"--signIn [login] [password]\" to log in if already registered",
-      "input \"--signUp [login] [password]\" to register",
-      "input \"--exit\" to quit the program")
+      "input \"-signIn [login] [password]\" to log in if already registered",
+      "input \"-signUp [login] [password]\" to register",
+      "input \"-exit\" to quit the program")
     val userControlCommands: List[String] = List("-getAll", "-todo", "-done", "-removeAll",
       "-removeDone", "-remove", "-mark", "-add")
     val usrCtrlCmdsDescription: List[String] = List(
@@ -73,7 +74,7 @@ object Interface{
     }
     def auth: Unit = {
       Option(InputParser.input) match {
-        case Some("--signIn") => {controller(Authorization.signIn("vlad", "vlad"))} ///  <--HERE!!!
+        case Some(("-signIn", Some(login), Some(password))) => {controller(Authorization.signIn(login, password))} ///  <--HERE!!!
         case Some("--signUp") => {Authorization.signUp("vlad", "vlad");init} ///  <--HERE!!!
         case Some("--help") => init
         case Some("--exit") => {println("GoodBye!");()} ///ADD EXIT COMMAND!!

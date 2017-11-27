@@ -5,9 +5,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 object Main {
-  val db = Database.forURL(
-    "jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root"
-  )
+  val db = Database.forURL("jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root")
   val taskRepository = new TaskRepository(db)
   val userRepository = new UserRepository(db)
 
