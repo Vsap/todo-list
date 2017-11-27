@@ -42,9 +42,7 @@ object Interface{
   ////ADD CHANGE STATUS COMMAND (here & in def controller)
   object InputParser{
     val cmdPattern = """(-[a-zA-Z]*?) ([0-9a-zA-Z]*?) ([0-9a-zA-Z]*)""".r
-    def input: (String, Option[String], Option[String]) = cmdPattern.findFirstIn(StdIn.readLine()) match {
-      case ("-signIn", login, password) => ("-signIn", Option(login), Option(password))
-    }
+    def input: Option[(String, Option[String], Option[String])] = cmdPattern.findFirstIn(StdIn.readLine()).map{case cmdPattern(command, login, password) => (command, Some(login), Some(password))}
     val authorizationCommands: List[String] = List("--help", "-signIn", "-signUp","-exit")
     val authCmdsDescription: List[String] = List(
       "input \"--help\" with no args to get all the commands with the description",
@@ -73,31 +71,32 @@ object Interface{
       auth
     }
     def auth: Unit = {
-      Option(InputParser.input) match {
+      InputParser.input match {
         case Some(("-signIn", Some(login), Some(password))) => {controller(Authorization.signIn(login, password))} ///  <--HERE!!!
-        case Some("--signUp") => {Authorization.signUp("vlad", "vlad");init} ///  <--HERE!!!
-        case Some("--help") => init
-        case Some("--exit") => {println("GoodBye!");()} ///ADD EXIT COMMAND!!
-        case Some(_) => {println("Input error!"); auth}
-        case None => {println("Input error!"); auth}
+        case Some(("-signUn", Some(login), Some(password))) => {controller(Authorization.signUp(login, password))} ///  <--HERE!!!
+        case Some(("-help", None, None)) => init
+        case Some(("-exit", None, None)) => {println("GoodBye!");()} ///ADD EXIT COMMAND!!
+        case Some(_) => {println("Input error! Try again!"); auth}
+        case None => {println("Input error! Try again!"); auth}
       }
     }
     def controller(uc: UserControl):Unit = {
-      println("U are in control mode")
+      println("U are logged in as "+uc.login+ ". Welcome!")
+      println("Control mode: ")
       println("Input the commands to manipulate the tasks")
-      Option(InputParser.input) match {
+      InputParser.input match {
 //        case Some("-getAll") => {uc.getTasks.foreach(println);()}
 //        case Some("-todo") => uc.getByStatus(1).map(println(_))
 //        case Some("-done") => uc.getByStatus(0).map(println(_))
-        case Some("-mark") => init //FIX!!
-        case Some("-removeAll") => {uc.remove;controller(uc)}
-        case Some("-remove") => {uc.removeById(0);controller(uc)} ///FIX!!!
-        case Some("-removeDone") => {uc.removeByStatus(0);controller(uc)}
-        case Some("-add") => {uc.add("new task");controller(uc)} ///FIX!!!!
-        case Some("-prev") => {auth}
-        case Some("--exit") => {println("GoodBye!");()} ///ADD EXIT COMMAND!!
-        case Some(_) => {println("Input error!"); controller(uc)}
-        case None => {println("Input error!"); controller(uc)}
+        case Some(("-mark", None, None)) => init //FIX!!
+        case Some(("-removeAll", None, None)) => {uc.remove;controller(uc)}
+        case Some(("-remove", Some(id), None)) => {uc.removeById(id.toString.toInt);controller(uc)} ///FIX!!!
+        case Some(("-removeDone", None, None)) => {uc.removeByStatus(0);controller(uc)}
+        case Some(("-add", Some(text), None)) => {uc.add(text.toString);controller(uc)} ///FIX!!!!
+        case Some(("-prev", None, None)) => {auth}
+        case Some(("-exit", None, None)) => {println("GoodBye!");()} ///ADD EXIT COMMAND!!
+        case Some(_) => {println("In control mode \"Unknown command\" exception!"); controller(uc)}
+        case None => {println("In control mode \"None Imput\" exception!"); controller(uc)}
       }
     }
   }
