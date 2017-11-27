@@ -1,15 +1,11 @@
 package model
 
 import repository._
-
 import scala.io._
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
-import slick.lifted.Tag
-import sun.security.util.Password
-
-import scala.concurrent.ExecutionContext.Implicits.global._
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
 
 object Interface{
   val db = Database.forURL("jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root")
@@ -31,13 +27,13 @@ object Interface{
 
   //REMAKE Authorization!!!!!!!!!!!
   object Authorization{
-    def signUp(login: String, password: String):Option[UserControl] = userRepository.ifMatches(User(login, password)) == 1 match {
+    def signUp(login: String, password: String):Option[UserControl] = Await.result(userRepository.ifMatches(User(login, password)), Duration.Inf) == 1 match {
       case false => {userRepository.insert(User(login, password));Some(UserControl(login, password))}
       case _ => {println("This username already exists");None}  //fix exception to program pointer!!!!!!!!
     }
     //def ifExists(login: String): Boolean = userRepository.getByLogin(login) match {case Some(_) => true; case _ => false}
     def signIn(login: String, password: String): Option[UserControl] =
-      userRepository.ifMatches(User(login, password)) == 1 match{
+      Await.result(userRepository.ifMatches(User(login, password)) ,Duration.Inf) == 1 match{
         case true => Some(UserControl(login,password))
         case _ => None
       }
