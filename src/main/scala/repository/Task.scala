@@ -23,15 +23,16 @@ object TaskTable{val table = TableQuery[TaskTable]}
 class TaskRepository(db: Database){
   def insert(task: Task): Future[Task] =
     db.run(TaskTable.table returning TaskTable.table += task)
-  def getAll(username: String): Future[List[Task]] = db.run(TaskTable.table.filter(_.userId === username).result.flatten)
+  def getAll(username: String): Future[Option[Task]] = db.run(TaskTable.table.filter(_.userId === username).result.headOption)
   def getByStatus(username: String, status: Int): Future[Option[Task]] =
-    db.run(TaskTable.table.filter(_.userId == username).filter(_.status === status).result.headOption)
+    db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result.headOption)
   //def changeStatus(username: String, status: Int): Future[]
   def deleteByStatus(username: String, status: Int): Future[Int] =
-    db.run(TaskTable.table.filter(_.userId == username).filter(_.status === status).delete)
+    db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).delete)
   def deleteById(username: String, id: Long): Future[Int] =
     db.run(TaskTable.table.filter(_.id === id).delete)
   def deleteAll(username: String): Future[Int] = db.run(TaskTable.table.filter(_.userId === username).delete)
   def update(username: String, task: Task, id: Long): Future[Int] =
     db.run(TaskTable.table.filter(_.id === id).update(task))
+
 }

@@ -22,6 +22,10 @@ object UserTable{val table = TableQuery[UserTable]}
 class UserRepository(db: Database){
   def insert(user: User): Future[User] =
     db.run(UserTable.table returning UserTable.table += user)
+  def ifMatches(user: User): Future[Option[User]] =
+    db.run(UserTable.table.filter(_.login === user.login).filter(_.password === user.password).result.headOption)
+  def getByLogin(login: String): Future[Option[User]] =
+    db.run(UserTable.table.filter(_.login === login).result.headOption)
   def delete(user: User): Future[Int] =
     db.run(UserTable.table.filter(_.login === user.login).delete)
 }
