@@ -1,11 +1,13 @@
 package model
 
 import repository._
+
 import scala.io._
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 import sun.security.util.Password
+
 import scala.concurrent.ExecutionContext.Implicits.global._
 import scala.concurrent.Future
 
@@ -31,12 +33,13 @@ object Interface{
   object Authorization{
     def signUp(login: String, password: String) = ifExists(login) match {
       case false => {userRepository.insert(User(login, password));UserControl(login, password)}
-      case _ => throw new Exception("This username already exists")  //fix exeption to program pointer!!!!!!!!
+      case _ => {println("This username already exists");Menu.init}  //fix exeption to program pointer!!!!!!!!
     }
-    def ifExists(login: String): Boolean = Option(userRepository.getByLogin(login)) match {case Some(_) => true; case None => false}
-    def signIn(login: String, password: String) = Option(userRepository.ifMatches(User(login,password))) match {
-      case Some(_) => UserControl(login, password) //remake!!!!!
-      case None => throw new Exception("Wrong username or password!") ///fix exeption
+    def ifExists(login: String): Boolean = Option(userRepository.getByLogin(login)) match {case Some(_) => true; case _ => false}
+    def ifEquals(login: String, password: String): Boolean = Option(userRepository.getByLogin(login).flatten()) match {case Some(User(_,p)) => p == password; case _ => false}
+    def signIn(login: String, password: String):Unit = ifEquals(login, password) match {
+      case true => UserControl(login, password)
+      case _ => {println("This username already exists");Menu.init}
     }
   }
   ////ADD CHANGE STATUS COMMAND (here & in def controller)

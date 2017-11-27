@@ -1,9 +1,11 @@
 package repository
 
+import model.Interface.UserControl
 import model._
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
+
 import scala.concurrent.Future
 
 case class User(login: String, password: String){
