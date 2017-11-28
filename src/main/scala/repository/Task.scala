@@ -4,6 +4,8 @@ import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 case class Task(id: Option[Long], userId: String, text: String, status: Int)
 
@@ -23,8 +25,10 @@ object TaskTable{val table = TableQuery[TaskTable]}
 class TaskRepository(db: Database){
   def insert(task: Task): Future[Task] =
     db.run(TaskTable.table returning TaskTable.table += task)
-  def getAll(username: String) =() //: Future[Option[List[Task]]] = ///FIX FROM .headOption to List
- //   db.run(TaskTable.table.filter(_.userId === username).result.flatten)
+  def getAll(username: String): Future[Seq[Task]] = {
+    val query = TaskTable.table.filter(_.userId === username).result
+    db.run(query)
+  }
   def getByStatus(username: String, status: Int): Future[Option[Task]] =
     db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result.headOption)
   //def changeStatus(username: String, status: Int): Future[]

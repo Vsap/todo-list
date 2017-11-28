@@ -5,6 +5,8 @@ import scala.io._
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.{Await, Future}
+import implicits._
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 object Interface{
@@ -88,9 +90,9 @@ object Interface{
         println("Control mode: ")
         println("Input the commands to manipulate the tasks")
         InputParser.input match {
-          //case Some(("-getAll", Some(""), Some(""))) => {uc.getTasks.foreach(println);()}
-          case Some(("-todo", Some(""), Some(""))) => {uc.getByStatus(1).map(println(_));controller(Some(uc))}
-          case Some(("-done", Some(""), Some(""))) => {uc.getByStatus(0).map(println(_));controller(Some(uc))}
+          case Some(("-getAll", Some(""), Some(""))) => {Await.result(uc.getTasks, Duration.Inf).map(p => println(p));controller(Some(uc))}
+          case Some(("-todo", Some(""), Some(""))) => {Await.result(uc.getByStatus(1), Duration.Inf).map(p => println(p));controller(Some(uc))}
+          case Some(("-done", Some(""), Some(""))) => {Await.result(uc.getByStatus(0),Duration.Inf).map(println(_));controller(Some(uc))}
           case Some(("-mark", Some(""), Some(""))) => init //FIX!!
           case Some(("-removeAll", Some(""), Some(""))) => {uc.remove;controller(Some(uc))}
           case Some(("-remove", Some(id), Some(""))) => {uc.removeById(id.toString.toInt);controller(Some(uc))}
