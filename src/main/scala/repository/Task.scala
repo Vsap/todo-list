@@ -32,7 +32,6 @@ class TaskRepository(db: Database){
 
   def getByStatus(username: String, status: Int): Future[Seq[Task]] =
     db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result)
-  //def changeStatus(username: String, status: Int): Future[]
   def deleteByStatus(username: String, status: Int): Future[Int] =
     db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).delete)
   def deleteById(username: String, id: Long): Future[Int] =

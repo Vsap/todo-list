@@ -9,13 +9,7 @@ object Main {
   val taskRepository = new TaskRepository(db)
   val userRepository = new UserRepository(db)
 
-  def main(args: Array[String]): Unit = {
-    //init
-    //fill
-    Interface.Menu.init
-    //clear
-    //Await.result(taskRepository.update("data", Task(Some(1),"root","take a picture", 1), 1), Duration.Inf)
-  }
+  def main(args: Array[String]): Unit = {Interface.Menu.init}
   def clear = {
     Await.result(taskRepository.deleteByStatus("vlad", 1), Duration.Inf)
     Await.result(userRepository.delete(User("vlad", "vlad")), Duration.Inf)
