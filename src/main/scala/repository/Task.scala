@@ -29,8 +29,8 @@ class TaskRepository(db: Database){
     val query = TaskTable.table.filter(_.userId === username).result
     db.run(query)
   }
-  def getByStatus(username: String, status: Int): Future[Option[Task]] =
-    db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result.headOption)
+  def getByStatus(username: String, status: Int): Future[Seq[Task]] =
+    db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result)
   //def changeStatus(username: String, status: Int): Future[]
   def deleteByStatus(username: String, status: Int): Future[Int] =
     db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).delete)

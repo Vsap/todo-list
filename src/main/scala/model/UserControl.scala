@@ -5,18 +5,17 @@ import scala.io._
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.{Await, Future}
-import implicits._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 object Interface{
-  val db = Database.forURL("jdbc:postgresql://127.0.0.1/postgres?user=postgres&password=root")
+  val db = Database.forConfig("connect")
   val taskRepository = new TaskRepository(db)
   val userRepository = new UserRepository(db)
 
   case class UserControl(login: String = "data", password: String = "data"){
     def getTasks = taskRepository.getAll(login)
-    def getByStatus(status: Int) = taskRepository.getByStatus(login, 1)
+    def getByStatus(status: Int) = taskRepository.getByStatus(login, status)
     //def changeStatus(status: Int) = taskRepository.update()
     def add(text: String) =
       taskRepository.insert(Task(Some(0), login, text, 1))
@@ -29,7 +28,8 @@ object Interface{
 
   //REMAKE Authorization!!!!!!!!!!!
   object Authorization{
-    def signUp(login: String, password: String):Option[UserControl] = Await.result(userRepository.ifMatches(User(login, password)), Duration.Inf) == 1 match {
+    def signUp(login: String, password: String):Option[UserControl] =
+      Await.result(userRepository.contains(User(login, password)), Duration.Inf) == 1 match {
       case false => {userRepository.insert(User(login, password));Some(UserControl(login, password))}
       case _ => {println("This username already exists");None}  //fix exception to program pointer!!!!!!!!
     }
