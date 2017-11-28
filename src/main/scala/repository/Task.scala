@@ -29,6 +29,7 @@ class TaskRepository(db: Database){
     val query = TaskTable.table.filter(_.userId === username).result
     db.run(query)
   }
+
   def getByStatus(username: String, status: Int): Future[Seq[Task]] =
     db.run(TaskTable.table.filter(_.userId === username).filter(_.status === status).result)
   //def changeStatus(username: String, status: Int): Future[]
@@ -37,7 +38,9 @@ class TaskRepository(db: Database){
   def deleteById(username: String, id: Long): Future[Int] =
     db.run(TaskTable.table.filter(_.id === id).delete)
   def deleteAll(username: String): Future[Int] = db.run(TaskTable.table.filter(_.userId === username).delete)
-  def update(username: String, task: Task, id: Long): Future[Int] =
-    db.run(TaskTable.table.filter(_.id === id).update(task))
+  def setStatus(username: String, id: Long,status: Int): Future[Int] =
+    db.run(TaskTable.table.filter(_.userId === username).filter(_.id === id).map(msg => (msg.status)).update((status)))
+  def setText(username: String, id: Long, text: String): Future[Int] =
+    db.run(TaskTable.table.filter(_.userId === username).filter(_.id === id).map(msg => (msg.text)).update((text)))
 
 }

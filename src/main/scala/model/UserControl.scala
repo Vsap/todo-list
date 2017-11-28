@@ -16,7 +16,8 @@ object Interface{
   case class UserControl(login: String = "data", password: String = "data"){
     def getTasks = taskRepository.getAll(login)
     def getByStatus(status: Int) = taskRepository.getByStatus(login, status)
-    //def changeStatus(status: Int) = taskRepository.update()
+    def changeStatus(id: Long, status: Int) = taskRepository.setStatus(login,id,status);
+    def changeText(id: Long, text: String) = taskRepository.setText(login,id,text);
     def add(text: String) =
       taskRepository.insert(Task(Some(0), login, text, 1))
     def remove = taskRepository.deleteAll(login)
@@ -93,9 +94,11 @@ object Interface{
           case Some(("-getAll", Some(""), Some(""))) => {Await.result(uc.getTasks, Duration.Inf).map(p => println(p));controller(Some(uc))}
           case Some(("-todo", Some(""), Some(""))) => {Await.result(uc.getByStatus(1), Duration.Inf).map(p => println(p));controller(Some(uc))}
           case Some(("-done", Some(""), Some(""))) => {Await.result(uc.getByStatus(0),Duration.Inf).map(println(_));controller(Some(uc))}
-          case Some(("-mark", Some(""), Some(""))) => init //FIX!!
+          case Some(("-mark", Some(id), Some(""))) => {uc.changeStatus(id.toString.toLong,0);controller(Some(uc))}
+          case Some(("-unmark", Some(id), Some(""))) => {uc.changeStatus(id.toString.toLong,1);controller(Some(uc))}
+          case Some(("-edit", Some(id), Some(""))) => {uc.changeText(id.toString.toLong,StdIn.readLine());controller(Some(uc))}
           case Some(("-removeAll", Some(""), Some(""))) => {uc.remove;controller(Some(uc))}
-          case Some(("-remove", Some(id), Some(""))) => {uc.removeById(id.toString.toInt);controller(Some(uc))}
+          case Some(("-remove", Some(id), Some(""))) => {uc.removeById(id.toString.toLong);controller(Some(uc))}
           case Some(("-removeDone", Some(""), Some(""))) => {uc.removeByStatus(0);controller(Some(uc))}
           case Some(("-add", Some(""), Some(""))) => {uc.add(StdIn.readLine());controller(Some(uc))}
           case Some(("-prev", Some(""), Some(""))) => auth
