@@ -1,7 +1,6 @@
 package repository
 
-import model.Interface.UserControl
-import model._
+
 import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import slick.lifted.Tag

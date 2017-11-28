@@ -2,10 +2,8 @@ package model
 
 import repository._
 import scala.io._
-import slick.lifted.TableQuery
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 object Interface{
