@@ -22,13 +22,13 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.12.4:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.typesafe:config:1.2.1:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.typesafe.slick:slick-hikaricp_2.12:3.2.1:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.typesafe.slick:slick_2.12:3.2.1:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.zaxxer:HikariCP:2.5.1:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.postgresql:postgresql:42.1.4:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.reactivestreams:reactive-streams:1.0.0:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.slf4j:slf4j-api:1.7.21:jar" level="project" />
     <orderEntry type="library" name="SBT: org.slf4j:slf4j-nop:1.6.4:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.slf4j:slf4j-api:1.7.21:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.reactivestreams:reactive-streams:1.0.0:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.postgresql:postgresql:42.1.4:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.zaxxer:HikariCP:2.5.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.typesafe.slick:slick_2.12:3.2.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.typesafe.slick:slick-hikaricp_2.12:3.2.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.typesafe:config:1.2.1:jar" level="project" />
   </component>
 </module>

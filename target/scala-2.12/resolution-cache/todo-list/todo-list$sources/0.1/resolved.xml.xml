@@ -4,7 +4,7 @@
 		module="todo-list$sources"
 		revision="0.1"
 		status="integration"
-		publication="20171126132007"
+		publication="20171130192629"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
