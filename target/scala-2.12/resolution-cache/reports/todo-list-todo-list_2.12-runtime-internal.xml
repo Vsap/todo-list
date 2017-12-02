@@ -7,7 +7,7 @@
 		revision="0.1"
 		conf="runtime-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20171126132006"/>
+		date="20171202121951"/>
 	<dependencies>
 		<module organisation="org.postgresql" name="postgresql">
 			<revision name="42.1.4" status="release" pubdate="20170801201537" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/pgjdbc/pgjdbc" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="8">
